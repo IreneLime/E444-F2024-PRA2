@@ -1,21 +1,16 @@
-FROM python:3.6-alpine
+FROM ubuntu:latest
+RUN apt-get update -y
+RUN apt-get install -y python3-pip
+RUN apt-get update && apt-get install -y python3.12-venv python3-pip-whl python3-setuptools-whl
+RUN python3 -m venv /home/demo/venv
 
-ENV FLASK_APP flasky.py
-ENV FLASK_CONFIG production
+ADD requirements.txt /home/demo
 
-RUN adduser -D flasky
-USER flasky
+RUN /home/demo/venv/bin/pip install -r /home/demo/requirements.txt
 
-WORKDIR /home/flasky
+ADD templates /home/demo/
+ADD hello.py /home/demo/
 
-COPY requirements requirements
-RUN python -m venv venv
-RUN venv/bin/pip install -r requirements/docker.txt
+CMD ["/home/demo/venv/bin/python3 /home/demo/hello.py"]
 
-COPY app app
-COPY migrations migrations
-COPY flasky.py config.py boot.sh ./
-
-# run-time configuration
-EXPOSE 5000
-ENTRYPOINT ["./boot.sh"]
+ENTRYPOINT ["/bin/bash", "-c"]
