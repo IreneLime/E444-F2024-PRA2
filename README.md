@@ -12,3 +12,8 @@ Run Instruction:
 
 Run on: http://127.0.0.1:5000
 
+To build and run docker:
+
+docker build -t flask-sample:latest .
+
+docker run -d -p 5000:5000 flask-sample
