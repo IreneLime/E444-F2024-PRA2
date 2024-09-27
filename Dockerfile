@@ -1,16 +1,16 @@
-FROM ubuntu:latest
-RUN apt-get update -y
-RUN apt-get install -y python3-pip
-RUN apt-get update && apt-get install -y python3.12-venv python3-pip-whl python3-setuptools-whl
-RUN python3 -m venv /home/demo/venv
+FROM python:3.12-alpine
 
-ADD requirements.txt /home/demo
+#Set up work directory
+WORKDIR /home
 
-RUN /home/demo/venv/bin/pip install -r /home/demo/requirements.txt
+#Copy everything from here to image
+COPY . /home
 
-ADD templates /home/demo/
-ADD hello.py /home/demo/
+# Set up the environment
+RUN python -m venv venv
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt
 
-CMD ["/home/demo/venv/bin/python3 /home/demo/hello.py"]
-
-ENTRYPOINT ["/bin/bash", "-c"]
+# Run hello.py
+ENV FLASK_APP=hello.py
+CMD ["flask", "run", "--host=0.0.0.0"]
