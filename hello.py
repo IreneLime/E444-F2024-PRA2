@@ -4,6 +4,7 @@ from flask_moment import Moment
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, StopValidation
+import re
 
 
 def email_validation(form, field):
@@ -49,7 +50,7 @@ def index():
             flash("You have changed your email.")
 
         # Check for string "utoronto" in input email
-        if "utoronto" not in form.email.data:
+        if "@mail.utoronto" not in form.email.data:
             session["message"] = "Please use your UofT email."
         else:
             session["message"] = f"Your UofT email is {form.email.data}"
